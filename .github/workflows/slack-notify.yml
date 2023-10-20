@@ -12,7 +12,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: general
           SLACK_TITLE: CICD-PROJECT
-          SLACK_MESSAGE: 'Name:SHEN YU
-                          Email:E1221824@u.nus.edu
-                          Repository:'
+          SLACK_MESSAGE: |
+            Name:SHEN YU
+            Email:E1221824@u.nus.edu
           
