@@ -21,7 +21,13 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'HIGH'
 
-
+    - name: Send Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CICD
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: Scan failed
+        SLACK_MESSAGE: Failed trivy scan,see uploaded report
     
     - name: List files in the directory
       run: ls -a
