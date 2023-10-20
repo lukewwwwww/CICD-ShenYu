@@ -5,44 +5,27 @@ on:
       - 'v*.*'
 
 jobs:
-  slackNotification:
-    name: Slack Notification
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Send Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-          SLACK_USERNAME: CICD
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: general
-          SLACK_TITLE: Image build and signed
-          SLACK_MESSAGE: |
-            Name:SHEN YU
-            Metricculation:E1221824
-            Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
-            Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
-            Image:
-  
   scan:
     name: Build
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Build an image from Dockerfile
-      run: |
-        docker build -t docker.io/my-organization/my-app:${{ github.sha }} .                    
+      uses: actions/checkout@v3                  
     
     - name: Run Trivy vulnerability scanner in fs mode
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-        format: 'table'
-        exit-code: '1'
+        scan-type: 'fs'
         ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+        format: 'table'
+        output: 'trivy-results.txt'
+        severity: 'HIGH'
+
+    - uses: MeilCli/slack-upload-file@v3
+      with:
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+        file_path: 'docs/*.txt'
+        initial_comment: 'post by slack-upload-file'
         
           
