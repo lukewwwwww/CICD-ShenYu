@@ -7,7 +7,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Slack Notification
-      uses: SHENYU/action-slack-notify@v2
+      uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_USERNAME: SHENYU
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
