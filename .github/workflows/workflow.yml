@@ -20,6 +20,12 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'HIGH'
+      
+    - name: Debug - List files
+      run: ls -l
+
+    - name: Debug - Display file content
+      run: cat trivy-results.txt
 
     - uses: MeilCli/slack-upload-file@v3
       with:
