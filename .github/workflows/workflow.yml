@@ -16,7 +16,7 @@ jobs:
           SLACK_TITLE: CICD-PROJECT
           SLACK_MESSAGE: |
             Name:SHEN YU
-            Metricculation:e1221824
-            Email:<E1221824@u.nus.edu|E1221824@u.nus.edu>
-            Git:<https://github.com/lukewwwwww/CICD-ShenYu:Github repository of CICD>
+            Metricculation:E1221824
+            Email:<mailto E1221824@u.nus.edu|E1221824@u.nus.edu>
+            Git:<mailto https://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
             Image:
