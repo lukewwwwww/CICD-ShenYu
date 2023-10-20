@@ -17,6 +17,6 @@ jobs:
             "Email":"E1221824@u.nus.edu"
           }
       env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           
             
