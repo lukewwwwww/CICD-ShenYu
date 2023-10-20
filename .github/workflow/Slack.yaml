@@ -1,0 +1,20 @@
+on: push
+name: Slack Notification Demo
+jobs:
+  slackNotification:
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Slack Notification
+      uses: SHENYU/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: SHENYU
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: testing
+        
+        SLACK_TITLE: Post Title
+        SLACK_MESSAGE: 'Post Content :rocket:'
+        
+        SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+        SLACK_ICON: https://github.com/rtCamp.png?size=48
