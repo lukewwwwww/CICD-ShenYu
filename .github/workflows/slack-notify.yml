@@ -11,7 +11,6 @@ jobs:
       env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: general
-          SLACK_USERNAME: SHENYU
-          SLACK_TITLE: Post Title
-          SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_TITLE: CICD-PROJECT
+          SLACK_MESSAGE: 'Name:SHEN YU \n Email:lukeshnno1@gmail.com'
           
