@@ -27,9 +27,11 @@ jobs:
       env:
         SLACK_USERNAME: CICD
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_CHANNEL: general
         SLACK_TITLE: Scan failed
         SLACK_MESSAGE: Failed trivy scan,see uploaded report
+    
+    - name: List files in the directory
+      run: ls -a
     
     - uses: MeilCli/slack-upload-file@v3
       with:
