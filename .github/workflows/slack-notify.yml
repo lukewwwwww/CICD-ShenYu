@@ -10,7 +10,7 @@ jobs:
       uses: rtCamp/action-slack-notify@v2
       env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: testing
+          SLACK_CHANNEL: general
           SLACK_USERNAME: SHENYU
           SLACK_TITLE: Post Title
           SLACK_MESSAGE: 'Post Content :rocket:'
