@@ -1,22 +1,48 @@
 name: 1
-on: [push]
+on: 
+  push:
+    branches:
+      - 'v*.*'
 
 jobs:
   slackNotification:
     name: Slack Notification
     runs-on: ubuntu-latest
     steps:
-    
     - uses: actions/checkout@v2
     - name: Send Notification
       uses: rtCamp/action-slack-notify@v2
       env:
+          SLACK_USERNAME: CICD
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_CHANNEL: general
-          SLACK_TITLE: CICD-PROJECT
+          SLACK_TITLE: Image build and signed
           SLACK_MESSAGE: |
             Name:SHEN YU
             Metricculation:E1221824
             Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
             Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
             Image:
+  
+  scan:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Build an image from Dockerfile
+      run: |
+        docker build -t docker.io/my-organization/my-app:${{ github.sha }} .                    
+    
+    - name: Run Trivy vulnerability scanner in fs mode
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+        
+          
