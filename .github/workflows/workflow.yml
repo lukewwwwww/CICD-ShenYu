@@ -20,18 +20,21 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'HIGH'
-      
-    - name: Debug - List files
-      run: ls -l
 
-    - name: Debug - Display file content
-      run: cat trivy-results.txt
-
+    - uses: actions/checkout@v2
+    - name: Send Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CICD
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: general
+        SLACK_TITLE: Scan failed
+        SLACK_MESSAGE: Failed trivy scan,see uploaded report
+    
     - uses: MeilCli/slack-upload-file@v3
       with:
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         file_path: 'trivy-results.txt'
         initial_comment: 'post by slack-upload-file'
-        
-          
+    
