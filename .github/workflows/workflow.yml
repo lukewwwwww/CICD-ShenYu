@@ -21,13 +21,11 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'HIGH'
 
-    - name: Send Notification
-      uses: rtCamp/action-slack-notify@v2
+    - name: Send GitHub Action trigger data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
       env:
-        SLACK_USERNAME: CICD
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: Scan failed
-        SLACK_MESSAGE: Failed trivy scan,see uploaded report
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     
     - name: List files in the directory
       run: ls -a
