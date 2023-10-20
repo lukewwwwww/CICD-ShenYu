@@ -1,0 +1,22 @@
+name: 1
+on: [push]
+
+jobs:
+  slackNotification:
+    runs-on: ubuntu-latest
+    name: Slack Notification
+    
+    steps:
+    - name: Send Notification
+      id: slack
+      uses: slackapi/slack-github-action@v1.24.0
+      with:
+        payload: |
+          {
+            "Name":"SHEN YU"
+            "Email":"E1221824@u.nus.edu"
+          }
+      env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          
+            
