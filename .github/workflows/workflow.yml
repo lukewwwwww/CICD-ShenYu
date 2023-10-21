@@ -47,11 +47,11 @@ jobs:
       id: build-and-push
       with:
         push: true
-        tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}'
+        tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}'
 
     - name: Sign image with a key
       run: |
-        cosign sign --key ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}
+        cosign sign --key ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     
