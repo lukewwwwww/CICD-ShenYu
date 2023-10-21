@@ -48,7 +48,7 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key  "${{ secrets.COSIGN_PRIVATE_KEY }}" -y <lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}>
+        cosign sign --key  '../../tmp.cosign.key' -y <lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}>
         cosign verify --key '../../cosign.pub' <lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}>
 
     
