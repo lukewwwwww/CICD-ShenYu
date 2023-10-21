@@ -50,11 +50,13 @@ jobs:
 
     - name: Write private key to file
       run: echo "$COSIGN_PRIVATE_KEY" > cosign.key
+
     - name: Sign image with a key
       run: |
         cosign sign --key  cosign.key -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        
     - name: Remove private key
       run: rm -f cosign.key
         
