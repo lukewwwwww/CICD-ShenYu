@@ -38,11 +38,12 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+    - id: commit
+      uses: prompt/actions-commit-hash@v3
     - id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: lukelukeyuy/shenyu-cicd/v12345
+        images: lukelukeyuy/shenyu-cicd/${{ steps.commit.outputs}}
         tags: type=sha,format=hash
          
     - name: Build and push
