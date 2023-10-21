@@ -42,22 +42,18 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: Sign image with a key
-      run: |
-        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
-      env:
-        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-               
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
         push: true
         tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash}}'
 
+    - name: Sign image with a key
+      run: |
+        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
+      env:
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         
-
-        
-    
     - name: Send Notification-Right
       uses: rtCamp/action-slack-notify@v2
       env:
