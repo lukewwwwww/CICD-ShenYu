@@ -47,11 +47,11 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key="${{ secrets.COSIGN_PRIVATE_KEY }}" -y lukelukeyuy/shenyu-cicd@${{ steps.commithash.outputs.hash }}
-        cosign verify --key='../../cosign.pub' lukelukeyuy/shenyu-cicd@${{ steps.commithash.outputs.hash }}
+        cosign sign -yes --key env://COSIGN_PRIVATE_KEY  "${TAGS}"
+        cosign verify --key '../../cosign.pub' lukelukeyuy/shenyu-cicd@${{ steps.commithash.outputs.hash }}
       env:
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        TAGS: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}'
     
     - name: Send Notification-Right
       uses: rtCamp/action-slack-notify@v2
