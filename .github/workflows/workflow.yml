@@ -50,7 +50,7 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.short }}`
+        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.short }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     
