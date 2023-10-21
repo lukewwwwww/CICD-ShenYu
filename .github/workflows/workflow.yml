@@ -48,13 +48,16 @@ jobs:
         push: true
         tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash}}'
 
+    - name: Write private key to file
+      run: echo "$COSIGN_PRIVATE_KEY" > cosign.key
     - name: Sign image with a key
       run: |
-        cosign sign --key  env://COSIGN_PRIVATE_KEY "${TAGS}"
+        cosign sign --key  cosign.key -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        TAGS: 'lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash}}'
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+    - name: Remove private key
+      run: rm -f cosign.key
+        
     
     - name: Send Notification-Right
       uses: rtCamp/action-slack-notify@v2
