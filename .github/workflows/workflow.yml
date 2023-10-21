@@ -36,7 +36,7 @@ jobs:
     - id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: lukelukeyuy/shenyu-cicd:v
+        images: lukelukeyuy/shenyu-cicd
         tags: type=sha,format=long
     
     - name: Login to Docker Hub
