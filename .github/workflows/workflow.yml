@@ -33,19 +33,16 @@ jobs:
     - name: Install Cosign
       uses: sigstore/cosign-installer@v3.1.1
 
-
-    
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
-        registry: lukelukeyuy/shenyu-cicd
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        
+
     - id: docker_meta
       uses: docker/metadata-action@v5
       with:
-        images: lukelukeyuy/shenyu-cicd/sigstore/sample-honk
+        images: lukelukeyuy/shenyu-cicd
         tags: type=sha,format=long
          
     - name: Build and push
