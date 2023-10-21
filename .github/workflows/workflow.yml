@@ -20,9 +20,13 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
+    
 
-  
+  Right-workflow:
+    name: docker
+    runs-on: ubuntu-latest
 
+    steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
@@ -48,13 +52,23 @@ jobs:
       id: build-and-push
       with:
         push: true
-        tags: ${{ steps.commithash.outputs.short }}
+        tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}'
 
     - name: Sign image with a key
       run: |
         cosign sign --key  "${{ secrets.COSIGN_PRIVATE_KEY }}" -y <lukelukeyuy/shenyu-cicd:v1234>
         cosign verify --key '../../cosign.pub' <lukelukeyuy/shenyu-cicd:v1234>
+
+    
+    - name: Send Notification-Right
+      uses: rtCamp/action-slack-notify@v2
       env:
-        TAGS: ${{ steps.docker_meta.outputs.tags }}
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        DIGEST: ${{ steps.build-and-push.outputs.digest }}
+        SLACK_USERNAME: CICD
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: Image build and signed
+        SLACK_MESSAGE: |
+          Name:SHEN YU
+          Metricculation:E1221824
+          Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
+          Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
+          Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
