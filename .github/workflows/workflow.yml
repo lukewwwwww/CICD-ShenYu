@@ -54,7 +54,7 @@ jobs:
         cosign sign --key --yes env://COSIGN_PRIVATE_KEY "${TAGS}"
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        TAGS: ${{ steps.build_and_push.outputs.tags }}
+        TAGS: lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     
     - name: Send Notification-Right
