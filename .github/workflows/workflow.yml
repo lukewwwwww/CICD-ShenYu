@@ -25,7 +25,10 @@ jobs:
 
     - id: commithash
       uses: prompt/actions-commit-hash@v3
-
+      
+    - name: Install Cosign
+      uses: sigstore/cosign-installer@v3.1.1
+      
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
     
