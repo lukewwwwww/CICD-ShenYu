@@ -21,15 +21,7 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
-
-  Right-workflow:
-    name: docker
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
+    
     - id: commithash
       uses: prompt/actions-commit-hash@v3
 
