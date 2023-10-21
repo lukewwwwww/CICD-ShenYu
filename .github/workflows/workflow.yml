@@ -1,4 +1,4 @@
-name: 1
+name: SHENYU-ACTION
 on: 
   push:
     branches:
@@ -19,7 +19,15 @@ jobs:
         ignore-unfixed: true
         format: 'table'
         output: 'trivy-results.txt'
-        severity: 'HIGH'
+        severity: 'CRITICAL,HIGH'
+
+  
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - id: commithash
+      uses: prompt/actions-commit-hash@v3
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -33,9 +41,24 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - id: docker_meta
+      uses: docker/metadata-action@v4.4.0
+      with:
+        images: ghcr.io/sigstore/sample-honk
+        tags: type=sha,format=lon
+
     - name: Build and push
       uses: docker/build-push-action@v5
+      id: build-and-push
       with:
         push: true
-        tags: 'lukelukeyuy/shenyu-cicd:v1234'
-    
+        tags: ${{ steps.commithash.outputs.short }}
+
+    - name: Sign image with a key
+      run: |
+        cosign sign --key  "${{ secrets.COSIGN_PRIVATE_KEY }}" -y <lukelukeyuy/shenyu-cicd:v1234>
+        cosign verify --key '../../cosign.pub' <lukelukeyuy/shenyu-cicd:v1234>
+      env:
+        TAGS: ${{ steps.docker_meta.outputs.tags }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        DIGEST: ${{ steps.build-and-push.outputs.digest }}
