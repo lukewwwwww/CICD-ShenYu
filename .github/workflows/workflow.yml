@@ -21,7 +21,44 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
+    - name: Get the severity
+      id: severity
+      run: echo "Severity is ${{ github.event.inputs.severity }}"
+  
+  Wrong-workflow:
+    name: report
+    runs-on: ubuntu-latest
+    if: ${{}}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  
     
+    - name: Send Notification-Fail
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CICD
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_COLOR: '#FF0000'
+        SLACK_TITLE: Scan failed
+        SLACK_MESSAGE: Failed trivy scan,see uploaded report
+
+    - uses: MeilCli/slack-upload-file@v3
+      with:
+        slack_token: ${{ secrets.SLACK_TOKEN }}
+        channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+        file_path: 'trivy-results.txt'
+        initial_comment: 'post by slack-upload-file'
+        
+    - run: exit 1
+    
+  Right-workflow:
+    name: docker
+    runs-on: ubuntu-latest
+    if: ${{}}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
     - id: commithash
       uses: prompt/actions-commit-hash@v3
 
@@ -37,7 +74,11 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-
+    - id: docker_meta
+      uses: docker/metadata-action@v4.4.0
+      with:
+        images: ghcr.io/sigstore/sample-honk
+        tags: type=sha,format=lon
 
     - name: Build and push
       uses: docker/build-push-action@v5
@@ -48,9 +89,12 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key  '../../tmp.cosign.key' -y <lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}>
-        cosign verify --key '../../cosign.pub' <lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}>
-
+        cosign sign --key  "${{ secrets.COSIGN_PRIVATE_KEY }}" -y $"lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}"
+        cosign verify --key '../../cosign.pub' $"lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}"
+      env:
+        TAGS: ${{ steps.docker_meta.outputs.tags }}
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        DIGEST: ${{ steps.build-and-push.outputs.digest }}
     
     - name: Send Notification-Right
       uses: rtCamp/action-slack-notify@v2
