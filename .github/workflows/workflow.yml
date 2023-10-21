@@ -99,7 +99,7 @@ jobs:
         SLACK_TITLE: Image build and signed
         SLACK_MESSAGE: |
           Name:SHEN YU
-          Metricculation:E1221824
+          Metricculation:E12218241
           Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
           Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
           Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
