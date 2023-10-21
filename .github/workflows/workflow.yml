@@ -20,6 +20,7 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
+    
 
 
     - id: commithash
@@ -37,21 +38,18 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-
-
     - name: Build and push
       uses: docker/build-push-action@v5
       id: build-and-push
       with:
         push: true
-        tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}'
+        tags: 'lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}'
 
     - name: Sign image with a key
       run: |
-        cosign sign --key  "${{ secrets.COSIGN_PRIVATE_KEY }}" -y $"lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}"
-        cosign verify --key '../../cosign.pub' $"lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.short }}"
+        cosign sign --key="${{ secrets.COSIGN_PRIVATE_KEY }}" -y lukelukeyuy/shenyu-cicd@${{ steps.commithash.outputs.hash }}
+        cosign verify --key='../../cosign.pub' lukelukeyuy/shenyu-cicd@${{ steps.commithash.outputs.hash }}
       env:
-        TAGS: ${{ steps.docker_meta.outputs.tags }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}
     
