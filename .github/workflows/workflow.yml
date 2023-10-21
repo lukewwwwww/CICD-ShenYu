@@ -41,10 +41,12 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+    
+    - name: Set up cosign private key
+      run: echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign_private_key.pem
     - name: Sign image with a key
       run: |
-        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
+        cosign sign --key  cosign_private_key.pem -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
                
