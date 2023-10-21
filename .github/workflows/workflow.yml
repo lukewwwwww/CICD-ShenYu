@@ -21,59 +21,94 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
-
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v3
-    
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+    - name: Get the severity
+      id: severity
+      run: echo "Severity is ${{ github.event.inputs.severity }}"
+ 
+  Wrong-workflow:
+    name: report
+    runs-on: ubuntu-latest
+    if: ${{contains(github.event.inputs.severity,'high')}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 
       
-    - name: Install Cosign
-      uses: sigstore/cosign-installer@v3.1.1
-      with:
-        cosign-release: 'v2.2.0'
-
-    - id: commit
-      uses: prompt/actions-commit-hash@v3
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
-    - id: docker_meta
-      uses: docker/metadata-action@v4.4.0
-      with:
-        images: lukelukeyuy/v12345
-        tags: type=sha,format=long
-  
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      id: build-and-push
-      with:
-        push: true
-        tags: ${{steps.docker_meta.outputs.tags }}
-
-    - name: Sign image with a key
-      run: cosign sign --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
-      env:
-        COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
-        TAGS: ${{ steps.docker_meta.outputs.tags }}
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
-        DIGEST: ${{ steps.build-and-push.outputs.digest }}
+      - name: Send Notification-Fail
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: CICD
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_COLOR: '#FF0000'
+          SLACK_TITLE: Scan failed
+          SLACK_MESSAGE: Failed trivy scan,see uploaded report
         
+      - uses: MeilCli/slack-upload-file@v3
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          file_path: 'trivy-results.txt'
+          initial_comment: 'post by slack-upload-file'
+       
+      - run: exit 1
+     
+  Right-workflow:
+    name: docker
+    runs-on: ubuntu-latest
+    if: ${{!contains(github.event.inputs.severity,'high')}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+        with:
+          cosign-release: 'v2.2.0'
+
+      - id: commit
+        uses: prompt/actions-commit-hash@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - name: Send Notification-Right
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_USERNAME: CICD
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_TITLE: Image build and signed
-        SLACK_MESSAGE: |
-          Name:SHEN YU
-          Metricculation:E1221824
-          Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
-          Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
-          Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
+      - id: docker_meta
+        uses: docker/metadata-action@v4.4.0
+        with:
+          images: lukelukeyuy/v12345
+          tags: type=sha,format=long
+  
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        id: build-and-push
+        with:
+          push: true
+          tags: ${{steps.docker_meta.outputs.tags }}
+
+      - name: Sign image with a key
+        run: cosign sign --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+        env:
+          COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
+          TAGS: ${{ steps.docker_meta.outputs.tags }}
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+          DIGEST: ${{ steps.build-and-push.outputs.digest }}    
+    
+      - name: Send Notification-Right
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_USERNAME: CICD
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_TITLE: Image build and signed
+          SLACK_MESSAGE: |
+            Name:SHEN YU
+            Metricculation:E1221824
+            Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
+            Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
+            Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
