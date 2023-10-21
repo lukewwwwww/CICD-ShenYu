@@ -20,6 +20,8 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
+    
+
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
@@ -28,10 +30,13 @@ jobs:
       uses: docker/setup-buildx-action@v3
       
     - name: Install Cosign
-      uses: sigstore/cosign-installer@v2.2.0
+      uses: sigstore/cosign-installer@v3.1.1
       with:
-        cosign-release: v2.2.0
+        cosign-release: 'v2.2.0'
 
+    - name: check 
+      run: cosign version
+        
     - id: commit
       uses: prompt/actions-commit-hash@v3
 
