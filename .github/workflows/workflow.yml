@@ -23,12 +23,12 @@ jobs:
     
     - name: Get the severity
       id: severity
-      run: echo "Severity is ${{ github.event.inputs.severity }}"
+      run: echo "Severity:${{ github.event.inputs.severity }}"
  
   Wrong-workflow:
     name: report
     runs-on: ubuntu-latest
-    if: ${{contains(github.event.inputs.severity,'HIGH')}}
+    if: ${{ contains(github.event.inputs.severity, 'HIGH') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
