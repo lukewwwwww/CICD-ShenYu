@@ -41,6 +41,8 @@ jobs:
     
     - id: commithash
       uses: prompt/actions-commit-hash@v3
+    
+    - uses: docker/setup-buildx-action@v3
          
     - name: Build and push
       id: build_and_push
@@ -51,7 +53,7 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key -yes env://COSIGN_PRIVATE_KEY "${TAGS}"
+        cosign sign --key --yes env://COSIGN_PRIVATE_KEY "${TAGS}"
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
         TAGS: ${{ steps.build_and_push.outputs.tags }}
