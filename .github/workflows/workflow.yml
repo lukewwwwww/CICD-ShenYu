@@ -68,7 +68,7 @@ jobs:
     - id: docker_meta
       uses: docker/metadata-action@v4.4.0
       with:
-        images: lukelukeyuy/v12345
+        images: lukelukeyuy/shenyu-cicd
         tags: type=sha,format=long
   
     - name: Build and push
@@ -79,7 +79,7 @@ jobs:
         tags: ${{steps.docker_meta.outputs.tags }}
 
     - name: Sign image with a key
-      run: cosign sign --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
+      run: cosign sign --key ./cosign.key env://"${TAGS}@${DIGEST}"
       env:
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
         TAGS: ${{ steps.docker_meta.outputs.tags }}
