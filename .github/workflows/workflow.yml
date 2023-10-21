@@ -50,7 +50,7 @@ jobs:
 
     - name: Sign image with a key
       run: |
-        cosign sign --key '../../tmp.cosign.key' -y lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}
+        cosign sign --key 'C:\Users\Shen\CICD\fortunes\tmp.cosign.key' -y lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     
