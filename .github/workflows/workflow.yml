@@ -34,9 +34,6 @@ jobs:
       with:
         cosign-release: 'v2.2.0'
 
-    - name: check 
-      run: cosign version
-        
     - id: commit
       uses: prompt/actions-commit-hash@v3
 
