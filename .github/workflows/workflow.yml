@@ -39,27 +39,22 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - id: commit
+    - id: commithash
       uses: prompt/actions-commit-hash@v3
-    
-    - id: docker_meta
-      uses: docker/metadata-action@v5
-      with:
-        images: lukelukeyuy/shenyu-cicd/${{ steps.commit.outputs.short}}
-        tags: type=sha,format=long
          
     - name: Build and push
+      id: build_and_push
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: ${{ steps.docker_meta.outputs.tags }}
+        tags: ${{ steps.commithash.outputs.hash}}
 
     - name: Sign image with a key
       run: |
         cosign sign --key -yes env://COSIGN_PRIVATE_KEY "${TAGS}"
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-        TAGS: ${{ steps.docker_meta.outputs.tags }}
+        TAGS: ${{ steps.build_and_push.outputs.tags }}
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
     
     - name: Send Notification-Right
