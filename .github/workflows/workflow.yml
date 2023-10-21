@@ -12,7 +12,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3                  
     
-    - name: Run Trivy vulnerability scanner in fs mode
+    - name: Run Trivy
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: 'fs'
@@ -20,15 +20,12 @@ jobs:
         format: 'table'
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
-    
-    - name: Get the severity
-      id: severity
-      run: echo "Severity:${{ github.event.inputs.severity }}"
  
   Wrong-workflow:
     name: report
     runs-on: ubuntu-latest
-    if: ${{github.event.inputs.severity=='HIGH'||github.event.inputs.severity=='CRITICAL,HIGH' }}
+    needs: scan
+    if: ${{needs.scan.steps['Run Trivy'].outputs.severity=='HIGH'||needs.scan.steps['Run Trivy'].outputs.severity=='CRITICAL,HIGH'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
@@ -54,7 +51,8 @@ jobs:
   Right-workflow:
     name: docker
     runs-on: ubuntu-latest
-    if: ${{github.event.inputs.severity=='CRITICAL' }}
+    needs: scan
+    if: ${{needs.scan.steps['Run Trivy'].outputs.severity=='CRITICAL'}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
