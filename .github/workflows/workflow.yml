@@ -28,7 +28,7 @@ jobs:
   Wrong-workflow:
     name: report
     runs-on: ubuntu-latest
-    if: ${{contains(github.event.inputs.severity,'high')}}
+    if: ${{contains(github.event.inputs.severity,'HIGH')}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
@@ -54,7 +54,7 @@ jobs:
   Right-workflow:
     name: docker
     runs-on: ubuntu-latest
-    if: ${{!contains(github.event.inputs.severity,'high')}}
+    if: ${{!contains(github.event.inputs.severity,'HIGH')}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
