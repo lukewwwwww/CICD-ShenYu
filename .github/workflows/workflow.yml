@@ -23,6 +23,7 @@ jobs:
         severity: 'CRITICAL,HIGH'
       
     - name: Send Notification-Fail
+      if: ${{steps.run-trivy.outputs.severity == 'CRITICAL,HIGH'}}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_USERNAME: CICD
