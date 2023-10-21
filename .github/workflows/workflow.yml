@@ -43,7 +43,7 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: lukelukeyuy/shenyu-cicd/v12345
-        tags: type=sha,format=hash
+        tags: type=short,format=hash
          
     - name: Build and push
       uses: docker/build-push-action@v5
