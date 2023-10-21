@@ -79,7 +79,7 @@ jobs:
         tags: ${{steps.docker_meta.outputs.tags }}
 
     - name: Sign image with a key
-      run: cosign sign --key ./cosign.key env://"${TAGS}@${DIGEST}"
+      run: cosign sign --key C:\opt\bin\cosign.key env://"${TAGS}@${DIGEST}"
       env:
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
         TAGS: ${{ steps.docker_meta.outputs.tags }}
