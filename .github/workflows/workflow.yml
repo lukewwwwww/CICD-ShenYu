@@ -12,11 +12,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3         
     
-    - name: Check Commit
-      uses: mristin/opinionated-commit-message@v3.0.0
-      with:
-        additional-verbs: '#NORUN'
     
+    - name: Check commit              
+      env:
+        COMMITS_URL: ${{ github.event.head_commit.message }}
+      run: |
+        if echo "${COMMITS_URL}" | grep -q "#NORUN" ;then
+        echo "Commit message contains #NORUN."
+        exit 1
+
     - name: Run Trivy
       uses: aquasecurity/trivy-action@master
       id: run-trivy
@@ -61,8 +65,6 @@ jobs:
       with:
         cosign-release: 'v2.2.0'
 
-    - id: commit
-      uses: prompt/actions-commit-hash@v3
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -99,7 +101,7 @@ jobs:
         SLACK_TITLE: Image build and signed
         SLACK_MESSAGE: |
           Name:SHEN YU
-          Metricculation:E12218241
+          Metricculation:E1221824
           Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
           Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
           Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
