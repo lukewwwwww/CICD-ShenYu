@@ -17,7 +17,7 @@ jobs:
       env:
         COMMITS_URL: ${{ github.event.head_commit.message }}
       run: |
-        if echo "${COMMITS_URL}" | grep -q "#NORUN" ;then
+        if echo "${COMMITS_URL}" | grep -q "#aNORUN" ;then
         echo "Commit message contains #NORUN."
         exit 1
         fi
