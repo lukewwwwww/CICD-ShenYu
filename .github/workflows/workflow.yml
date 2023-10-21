@@ -46,7 +46,7 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: lukelukeyuy/shenyu-cicd/${{ steps.commit.outputs.short}}
-        tags: type=short,format=hash
+        tags: type=sha,format=long
          
     - name: Build and push
       uses: docker/build-push-action@v5
