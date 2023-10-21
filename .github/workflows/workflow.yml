@@ -21,14 +21,13 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
     
-    - name: Get the severity
-      id: severity
-      run: echo "Severity:${{ github.event.inputs.severity }}"
+
  
   Wrong-workflow:
     name: report
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.inputs.severity, 'HIGH') }}
+    needs: scan
+    if: ${{contains(needs.scan.outputs.trivy, 'HIGH')}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3 
@@ -54,7 +53,8 @@ jobs:
   Right-workflow:
     name: docker
     runs-on: ubuntu-latest
-    if: ${{!contains(github.event.inputs.severity,'HIGH')}}
+    needs: scan
+    if: ${{!contains(needs.scan.outputs.trivy, 'HIGH')}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
