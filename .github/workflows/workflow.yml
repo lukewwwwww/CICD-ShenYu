@@ -44,6 +44,7 @@ jobs:
     
     - name: Set up cosign private key
       run: echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign_private_key.pem
+      
     - name: Sign image with a key
       run: |
         cosign sign --key  cosign_private_key.pem -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.hash }}
