@@ -37,5 +37,5 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: 'shenyu/go-fortune:v1234'
+        tags: 'lukelukeyuy/shenyu-cicd:v1234'
     
