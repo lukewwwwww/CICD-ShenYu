@@ -20,6 +20,7 @@ jobs:
         if echo "${COMMITS_URL}" | grep -q "#aNORUN" ;then
         echo "Commit message contains #NORUN."
         exit 1
+        fi
 
     - name: Run Trivy
       uses: aquasecurity/trivy-action@master
