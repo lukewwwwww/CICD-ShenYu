@@ -79,11 +79,11 @@ jobs:
         tags: ${{steps.docker_meta.outputs.tags }}
 
     - name: Sign image with a key
-      run: cosign sign --key C:\opt\bin\cosign.key env://"${TAGS}@${DIGEST}"
+      run: cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
+        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
         TAGS: ${{ steps.docker_meta.outputs.tags }}
-        COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
     
     - name: Send Notification-Right
