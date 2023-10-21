@@ -32,15 +32,17 @@ jobs:
         SLACK_TITLE: Scan failed
         SLACK_MESSAGE: Failed trivy scan,see uploaded report
         
-    - uses: MeilCli/slack-upload-file@v3
+    - name: Upload report
       if: ${{steps.run-trivy.outputs.severity == 'HIGH'}}
+      uses: MeilCli/slack-upload-file@v3
       with:
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         file_path: 'trivy-results.txt'
         initial_comment: 'post by slack-upload-file'
-       
-    - if: ${{steps.run-trivy.outputs.severity == 'HIGH'}}
+      
+    - name: exit  
+      if: ${{steps.run-trivy.outputs.severity == 'HIGH'}}
       run: exit 1
      
   Right-workflow:
