@@ -27,7 +27,7 @@ jobs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
      
-    - id: commithash
+    - id: commit
       uses: prompt/actions-commit-hash@v3
     
     - name: Set up Docker Buildx
@@ -43,15 +43,14 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
                
     - name: Build and push
-      id: build_and_push
       uses: docker/build-push-action@v5
       with:
         push: true
-        tags: ${{ steps.commithash.outputs.hash}}
+        tags: 'lukelukeyuy/shenyu-cicd: ${{ steps.commit.outputs.short}}'
 
     - name: Sign image with a key
       run: |
-        cosign sign --key --yes ${{ secrets.COSIGN_PRIVATE_KEY }} lukelukeyuy/shenyu-cicd:${{ steps.commithash.outputs.hash }}`
+        cosign sign --key  ${{ secrets.COSIGN_PRIVATE_KEY }} -y lukelukeyuy/shenyu-cicd:${{ steps.commit.outputs.short }}`
       env:
         COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
     
