@@ -52,7 +52,7 @@ jobs:
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         file_path: 'trivy-results.txt'
-        initial_comment: 'post by slack-upload-file'
+        initial_comment: 'post by SHENYU'
       
     - name: exit  
       if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
@@ -79,7 +79,7 @@ jobs:
       uses: docker/metadata-action@v4.4.0
       with:
         images: lukelukeyuy/shenyu-cicd
-        tags: format=long
+        tags: type=sha
   
     - name: Build and push
       uses: docker/build-push-action@v4.0.0
