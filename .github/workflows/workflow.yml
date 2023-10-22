@@ -101,8 +101,8 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_TITLE: Image build and signed
         SLACK_MESSAGE: |
-          Name:SHEN YU
+          Name:test
           Metricculation:E1221824
-          Email:<mailtohttps://outlook.office365.com/mail/ | E1221824@u.nus.edu>
-          Git:<mailtohttps://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
-          Image:<mailtohttps://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
+          Email:<https://outlook.office365.com/mail/ | E1221824@u.nus.edu>
+          Git:<https://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
+          Image:<https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
