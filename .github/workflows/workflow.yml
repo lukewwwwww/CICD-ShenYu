@@ -90,6 +90,7 @@ jobs:
       run: cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
+        run: echo "${{ secrets.COSIGN_PRIVATE_KEY }}"
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
         TAGS: ${{ steps.docker_meta.outputs.tags }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
