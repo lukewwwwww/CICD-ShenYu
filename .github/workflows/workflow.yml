@@ -74,19 +74,19 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-  
+
     - name: Build and push
       uses: docker/build-push-action@v4.0.0
       id: build-and-push
       with:
         push: true
-        tags: ${{github.sha}}
+        tags: lukelukeyuy/shenyu-cicd:${{github.sha}}
 
     - name: Sign image with a key
       run: cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
-        TAGS: ${{github.sha}}
+        TAGS: lukelukeyuy/shenyu-cicd:${{github.sha}}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
     
