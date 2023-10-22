@@ -24,7 +24,6 @@ jobs:
 
     - name: Run Trivy
       uses: aquasecurity/trivy-action@master
-      id: run-trivy
       with:
         scan-type: 'fs'
         ignore-unfixed: true
@@ -32,8 +31,12 @@ jobs:
         output: 'trivy-results.txt'
         severity: 'CRITICAL,HIGH'
       
+    - name: severity
+      id: get-severity
+      run: echo "::set-output name=severity::CRITICAL,HIGH"
+
     - name: Send Notification-Fail
-      if: ${{steps.run-trivy.outputs.severity == 'CRITICAL,HIGH'||steps.run-trivy.outputs.severity =='HIGH'}}
+      if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
       uses: rtCamp/action-slack-notify@v2
       env:
         SLACK_USERNAME: CICD
@@ -43,7 +46,7 @@ jobs:
         SLACK_MESSAGE: Failed trivy scan,see uploaded report
         
     - name: Upload report
-      if: ${{steps.run-trivy.outputs.severity == 'CRITICAL,HIGH'||steps.run-trivy.outputs.severity =='HIGH'}}
+      if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
       uses: MeilCli/slack-upload-file@v3
       with:
         slack_token: ${{ secrets.SLACK_TOKEN }}
@@ -52,7 +55,7 @@ jobs:
         initial_comment: 'post by slack-upload-file'
       
     - name: exit  
-      if: ${{steps.run-trivy.outputs.severity == 'CRITICAL,HIGH'||steps.run-trivy.outputs.severity =='HIGH'}}
+      if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
       run: exit 1
 
     - name: Set up QEMU
