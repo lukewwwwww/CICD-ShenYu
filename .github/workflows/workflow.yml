@@ -79,6 +79,7 @@ jobs:
       uses: docker/metadata-action@v4.4.0
       with:
         images: lukelukeyuy/shenyu-cicd
+        tags: format=long
   
     - name: Build and push
       uses: docker/build-push-action@v4.0.0
@@ -94,3 +95,4 @@ jobs:
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
         TAGS: ${{ steps.docker_meta.outputs.tags }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
+    
