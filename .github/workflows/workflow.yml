@@ -29,11 +29,11 @@ jobs:
         ignore-unfixed: true
         format: 'table'
         output: 'trivy-results.txt'
-        severity: 'CRITICAL'
+        severity: 'CRITICAL,HIGH'
       
     - name: Severity
       id: get-severity
-      run: echo "::set-output name=severity::CRITICAL"
+      run: echo "::set-output name=severity::CRITICAL,HIGH"
 
     - name: Send Notification-Fail
       if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
@@ -52,7 +52,7 @@ jobs:
         slack_token: ${{ secrets.SLACK_TOKEN }}
         channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
         file_path: 'trivy-results.txt'
-        initial_comment: 'post by SHENYU'
+        initial_comment: 'post by SHEN|YU'
       
     - name: exit  
       if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
@@ -74,7 +74,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+    
     - name: Build and push
       uses: docker/build-push-action@v4.0.0
       id: build-and-push
@@ -90,3 +90,15 @@ jobs:
         TAGS: lukelukeyuy/shenyu-cicd:${{github.sha}}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
     
+    - name: Send Notification-Right
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_USERNAME: CICD
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_TITLE: Image build and signed
+        SLACK_MESSAGE: |
+          Name:SHEN YU
+          Metricculation:E1221824
+          Email:<https://outlook.office365.com/mail/ | E1221824@u.nus.edu>
+          Git:<https://github.com/lukewwwwww/CICD-ShenYu/tree/v1.0| Github repository of CICD>
+          Image:<https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general | https://hub.docker.com/repository/docker/lukelukeyuy/shenyu-cicd/general>
