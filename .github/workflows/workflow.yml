@@ -30,7 +30,7 @@ jobs:
         ignore-unfixed: true
         format: 'table'
         output: 'trivy-results.txt'
-        severity: 'CRITICAL'
+        severity: 'CRITICAL,HIGH'
       
     - name: Send Notification-Fail
       if: ${{steps.run-trivy.outputs.severity == 'CRITICAL,HIGH'||steps.run-trivy.outputs.severity =='HIGH'}}
@@ -101,7 +101,7 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_TITLE: Image build and signed
         SLACK_MESSAGE: |
-          Name:test
+          Name:SHEN YU
           Metricculation:E1221824
           Email:<https://outlook.office365.com/mail/ | E1221824@u.nus.edu>
           Git:<https://github.com/lukewwwwww/CICD-ShenYu | Github repository of CICD>
