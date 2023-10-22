@@ -75,22 +75,21 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - name: commit hash
-      id: commit
+    - id: commit
       uses: prompt/actions-commit-hash@v3
-
+  
     - name: Build and push
       uses: docker/build-push-action@v4.0.0
       id: build-and-push
       with:
         push: true
-        tags: ${{steps.commit.outputs.hash }}
+        tags: ${{steps.commit.outputs}}
 
     - name: Sign image with a key
       run: cosign sign --yes --key env://COSIGN_PRIVATE_KEY "${TAGS}@${DIGEST}"
       env:
         COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_PRIVATE_KEY }}
         COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
-        TAGS: ${{ steps.commit.outputs.hash }}
+        TAGS: ${{ steps.commit.outputs }}
         DIGEST: ${{ steps.build-and-push.outputs.digest }}    
     
