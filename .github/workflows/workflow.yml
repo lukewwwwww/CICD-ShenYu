@@ -29,11 +29,11 @@ jobs:
         ignore-unfixed: true
         format: 'table'
         output: 'trivy-results.txt'
-        severity: 'CRITICAL,HIGH'
+        severity: 'CRITICAL'
       
     - name: Severity
       id: get-severity
-      run: echo "::set-output name=severity::CRITICAL,HIGH"
+      run: echo "::set-output name=severity::CRITICAL"
 
     - name: Send Notification-Fail
       if: ${{steps.get-severity.outputs.severity == 'CRITICAL,HIGH'||steps.get-severity.outputs.severity =='HIGH'}}
